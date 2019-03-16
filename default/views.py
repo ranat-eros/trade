@@ -20,10 +20,6 @@ def update_crypto(request, crypto_id):
 	CryptoCurrencyService.update_crypto(crypto_id, request_body)
 	return HttpResponse('')
 
-def fetch_crypto_currency_price(request):
-	CryptoCurrencyService.fetch_and_save_crypto_currency_price(3, 2)
-	return HttpResponse('')
-
 def trigger_price_fetch(request):
 	schedule_task(repeat=3)
 	return HttpResponse('')
@@ -31,5 +27,5 @@ def trigger_price_fetch(request):
 @background(schedule=3)
 def schedule_task():
 	print ("Started")
-	CryptoCurrencyService.fetch_and_save_crypto_currency_price(3, 2)
+	CryptoCurrencyService.get_supporter_crypto_currencies_and_run_task()
 	print ("Done")

@@ -1,6 +1,7 @@
 import sys, os
 from default.models import Crypto, Currency, CurrencyPrice
 from default.libraries.bitfinex_api import BitfinexApi
+from django.conf import settings
 
 class CryptoCurrencyService:
 	def add_crypto_currency(request_body):
@@ -35,10 +36,18 @@ class CryptoCurrencyService:
 
 		crypto.save()
 
-	def fetch_and_save_crypto_currency_price(crypto_id, currency_id):
-		crypto = Crypto.objects.get(id = crypto_id)
-		currency = Currency.objects.get(id = currency_id)
+	def get_supporter_crypto_currencies_and_run_task():
+		scs = settings.VARIABLES['supported_crypto_currencies']
+		for sc in scs:
+			cryptos = Crypto.objects.filter(name = sc["crypto"])
+			currencies = Currency.objects.filter(name = sc["currency"])
 
+			if len(cryptos) == 1 and len(currencies) == 1:
+				CryptoCurrencyService.fetch_and_save_crypto_currency_price(cryptos[0], currencies[0])
+			else:
+				raise Exception("Crypto/currency not found")
+
+	def fetch_and_save_crypto_currency_price(crypto, currency):
 		if crypto is None:
 			raise Exception("Crypto not found")
 

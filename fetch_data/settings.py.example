@@ -132,5 +132,11 @@ VARIABLES = {
     "server_name": "server_1",
     "bitfinex_credentials": {
         "api_key": "XYZ"
-    }
+    },
+    "supported_crypto_currencies": [
+        {
+            "crypto": "bab",
+            "currency": "usd"
+        }
+    ]
 }
